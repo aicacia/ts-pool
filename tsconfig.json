@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "importHelpers": true,
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "outDir": "lib",
+    "strict": true,
+    "downlevelIteration": true,
+    "lib": ["esnext", "dom"]
+  },
+  "include": ["src"],
+  "exclude": ["src/**/*.test.*", "src/**/*.benchmark.*"],
+  "typedocOptions": {
+    "mode": "library",
+    "out": "docs"
+  }
+}
