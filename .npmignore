@@ -1,13 +1,11 @@
 node_modules
 coverage
 docs
-test
-examples
 npm-debug.log
 tsconfig.json
 .vscode
 .editorconfig
+.eslintignore
+.eslintrc
 .gitignore
-dist
-.cache
 .nyc_output
