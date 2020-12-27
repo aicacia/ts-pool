@@ -12,6 +12,10 @@ class Person {
     this.name = name;
     this.meta.age = age;
   }
+  static init(person: Person, name: string, age: number) {
+    person.name = name;
+    person.meta.age = age;
+  }
   static deconstructor(person: Person) {
     person.name = null as any;
     person.meta = {};
@@ -19,7 +23,7 @@ class Person {
 }
 
 tape("Create and release", (assert: tape.Test) => {
-  const pool = new Pool(Person, Person.deconstructor),
+  const pool = new Pool(Person, Person.init, Person.deconstructor),
     people: Person[] = [];
 
   function releasePeople() {
@@ -50,7 +54,7 @@ tape("Create and release", (assert: tape.Test) => {
 });
 
 tape("Create after hitting limit", (assert: tape.Test) => {
-  const pool = new Pool(Person, Person.deconstructor, 500);
+  const pool = new Pool(Person, Person.init, Person.deconstructor, 500);
 
   new Suite()
     .add("Create after hitting limit", () => {

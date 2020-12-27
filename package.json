@@ -1,6 +1,6 @@
 {
   "name": "@aicacia/pool",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "an object pool",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
     "coverage": "nyc --reporter=lcov --require ts-node/register tape src/**/*.test.{ts,tsx} | tap-spec; nyc report ---reporter=text",
     "clean": "rm -rf ./lib",
     "lint": "eslint . --fix",
-    "doc": "typedoc"
+    "doc": "typedoc --entryPoints src"
   },
   "husky": {
     "hooks": {

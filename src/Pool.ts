@@ -1,5 +1,10 @@
 import { IConstructor } from "@aicacia/core";
 
+export type IPoolConstructor<T, A extends any[] = any[]> = (
+  object: T,
+  ...args: A
+) => void;
+
 export type IPoolDeconstructor<T, A extends any[] = any[]> = (
   object: T,
   ...args: A
@@ -15,15 +20,18 @@ export function DEFAULT_DECONSTRUCTOR<T>(object: T) {
 
 export class Pool<T, CA extends any[] = any[], DA extends any[] = any[]> {
   private pool: T[] = [];
-  private Constructor: IConstructor<T, CA>;
+  private Class: IConstructor<T, CA>;
+  private Constructor: IPoolConstructor<T, CA>;
   private Deconstructor: IPoolDeconstructor<T, DA>;
   private limit: number;
 
   constructor(
-    Constructor: IConstructor<T, CA>,
+    Class: IConstructor<T, CA>,
+    Constructor: IPoolConstructor<T, CA>,
     Deconstructor: IPoolDeconstructor<T, DA> = DEFAULT_DECONSTRUCTOR as any,
     limit = Infinity
   ) {
+    this.Class = Class;
     this.Constructor = Constructor;
     this.Deconstructor = Deconstructor;
     this.limit = limit;
@@ -41,10 +49,10 @@ export class Pool<T, CA extends any[] = any[], DA extends any[] = any[]> {
     const object = this.pool.pop();
 
     if (object) {
-      this.Constructor.apply(object, args);
+      this.Constructor(object, ...args);
       return object;
     } else {
-      return new this.Constructor(...args);
+      return new this.Class(...args);
     }
   }
 

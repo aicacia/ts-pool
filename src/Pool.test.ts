@@ -11,6 +11,10 @@ class Person {
     this.name = name;
     this.meta.age = age;
   }
+  static init(person: Person, name: string, age: number) {
+    person.name = name;
+    person.meta.age = age;
+  }
   static deconstructor(person: Person) {
     person.name = null as any;
     person.meta = {};
@@ -18,7 +22,7 @@ class Person {
 }
 
 tape("Pool", (assert: tape.Test) => {
-  const pool = new Pool(Person, Person.deconstructor),
+  const pool = new Pool(Person, Person.init, Person.deconstructor),
     person = pool.create("billy", 21);
 
   assert.equal(person.name, "billy");
@@ -40,7 +44,9 @@ tape("Pool", (assert: tape.Test) => {
 });
 
 tape("Pool limits", (assert: tape.Test) => {
-  const pool = new Pool(Person, Person.deconstructor).setLimit(500),
+  const pool = new Pool(Person, Person.init, Person.deconstructor).setLimit(
+      500
+    ),
     created = [];
 
   for (let i = 0, il = 1000; i < il; i++) {
