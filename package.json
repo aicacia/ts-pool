@@ -4,23 +4,24 @@
   "description": "an object pool",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/aicacia/libs/ts-pool.git"
+    "url": "https://github.com/aicacia/ts-pool/"
   },
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "doc": "typedoc --entryPoints src",
     "prepublishOnly": "npm run clean && npm run build",
     "test": "ts-node node_modules/.bin/tape src/**/*.test.{ts,tsx} | tap-spec",
     "bench": "ts-node node_modules/.bin/tape src/**/*.benchmark.{ts,tsx} | tap-spec",
     "coverage": "nyc --reporter=lcov --require ts-node/register tape src/**/*.test.{ts,tsx} | tap-spec; nyc report ---reporter=text",
     "clean": "rm -rf ./lib",
     "lint": "eslint . --fix",
-    "doc": "typedoc --entryPoints src"
+    "prettier": "prettier --ignore-path ./.eslintignore --ignore-unknown --write ."
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint && npm run coverage"
+      "pre-commit": "npm run prettier && npm run lint && npm run coverage"
     }
   },
   "keywords": [
