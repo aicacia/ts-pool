@@ -2,6 +2,8 @@ import * as tape from "tape";
 import { Suite, Event } from "benchmark";
 import { Pool } from "./Pool";
 
+const ITERATIONS = 100000;
+
 class Person {
   name: string;
   meta: {
@@ -34,12 +36,23 @@ tape("Create and release", (assert: tape.Test) => {
   }
 
   new Suite()
+    .add("Native", () => {
+      const array = [];
+      for (let i = 0, il = ITERATIONS; i < il; i++) {
+        array.push(new Person("billy", 21));
+      }
+      array.length = 0;
+      for (let i = 0, il = ITERATIONS; i < il; i++) {
+        new Person("billy", 21);
+      }
+      array.length = 0;
+    })
     .add("Create and release", () => {
-      for (let i = 0, il = 500; i < il; i++) {
+      for (let i = 0, il = ITERATIONS; i < il; i++) {
         people.push(pool.create("billy", 21));
       }
       releasePeople();
-      for (let i = 0, il = 500; i < il; i++) {
+      for (let i = 0, il = ITERATIONS; i < il; i++) {
         people.push(pool.create("billy", 21));
       }
       releasePeople();
@@ -54,11 +67,23 @@ tape("Create and release", (assert: tape.Test) => {
 });
 
 tape("Create after hitting limit", (assert: tape.Test) => {
-  const pool = new Pool(Person, Person.init, Person.deconstructor, 500);
+  const pool = new Pool(
+    Person,
+    Person.init,
+    Person.deconstructor,
+    ITERATIONS * 0.5
+  );
 
   new Suite()
+    .add("Native", () => {
+      const array = [];
+      for (let i = 0, il = ITERATIONS; i < il; i++) {
+        array.push(new Person("billy", 21));
+      }
+      array.length = 0;
+    })
     .add("Create after hitting limit", () => {
-      for (let i = 0, il = 1000; i < il; i++) {
+      for (let i = 0, il = ITERATIONS; i < il; i++) {
         pool.create("billy", 21);
       }
     })

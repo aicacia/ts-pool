@@ -1,4 +1,4 @@
-import { IConstructor } from "@aicacia/core";
+import type { IConstructor } from "@aicacia/core";
 
 export type IPoolConstructor<T, A extends any[] = any[]> = (
   object: T,
