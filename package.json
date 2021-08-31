@@ -1,27 +1,30 @@
 {
   "name": "@aicacia/pool",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "an object pool",
   "repository": {
     "type": "git",
     "url": "https://github.com/aicacia/ts-pool/"
   },
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "module": "esm/index.js",
+  "main": "cjs/index.js",
+  "types": "cjs/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "doc": "typedoc --entryPoints src",
-    "prepublishOnly": "npm run clean && npm run build",
+    "buildESM": "rollup -c",
+    "doc": "typedoc",
+    "prepublishOnly": "npm run clean && npm run build && npm run buildESM",
     "test": "ts-node node_modules/.bin/tape src/**/*.test.{ts,tsx} | tap-spec",
     "bench": "ts-node node_modules/.bin/tape src/**/*.benchmark.{ts,tsx} | tap-spec",
-    "coverage": "nyc --reporter=lcov --require ts-node/register tape src/**/*.test.{ts,tsx} | tap-spec; nyc report ---reporter=text",
-    "clean": "rm -rf ./lib",
+    "coverage": "nyc --reporter=lcov --check-coverage --lines=75 --require ts-node/register tape src/**/*.test.{ts,tsx} | tap-spec; nyc report ---reporter=text",
+    "clean": "rm -rf esm cjs",
     "lint": "eslint . --fix",
-    "prettier": "prettier --ignore-path ./.eslintignore --ignore-unknown --write ."
+    "prettier": "prettier --ignore-path .eslintignore --ignore-unknown --write .",
+    "preCommit": "npm run prettier && npm run lint && npm run coverage && npm run prepublishOnly"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run prettier && npm run lint && npm run coverage"
+      "pre-commit": "npm run preCommit"
     }
   },
   "keywords": [
@@ -32,6 +35,9 @@
   "license": "(MIT OR Apache-2.0)",
   "readmeFilename": "README.md",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "20",
+    "@rollup/plugin-node-resolve": "13",
+    "@rollup/plugin-typescript": "8",
     "@aicacia/core": "0",
     "@types/benchmark": "2",
     "@types/tape": "4",
@@ -44,6 +50,8 @@
     "husky": "4",
     "nyc": "15",
     "prettier": "2",
+    "rollup-plugin-esm-import-to-url": "2",
+    "rollup-plugin-terser": "7",
     "tap-nyc": "1",
     "tap-spec": "5",
     "tape": "5",
