@@ -22,7 +22,8 @@
     "clean": "rm -rf esm cjs browser types .nyc_output coverage",
     "lint": "eslint . --fix",
     "prettier": "prettier --ignore-path .eslintignore --ignore-unknown --write .",
-    "preCommit": "npm run prettier && npm run lint && npm run coverage"
+    "preCommit": "npm run prettier && npm run lint && npm run coverage",
+    "prepare": "husky install"
   },
   "keywords": [
     "object",
