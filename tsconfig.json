@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "importsNotUsedAsValues": "error",
     "importHelpers": true,
     "target": "ES2015",
     "module": "CommonJS",
@@ -9,6 +8,7 @@
     "outDir": "cjs",
     "declarationDir": "types",
     "strict": true,
+    "skipLibCheck": true,
     "downlevelIteration": true,
     "lib": ["ESNext"]
   },

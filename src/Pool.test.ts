@@ -16,7 +16,7 @@ class Person {
     person.meta.age = age;
   }
   static deconstructor(person: Person) {
-    person.name = null as any;
+    person.name = null as never as string;
     person.meta = {};
   }
 }
@@ -45,9 +45,9 @@ tape("Pool", (assert: tape.Test) => {
 
 tape("Pool limits", (assert: tape.Test) => {
   const pool = new Pool(Person, Person.init, Person.deconstructor).setLimit(
-      500
-    ),
-    created = [];
+    500,
+  );
+  const created: Person[] = [];
 
   for (let i = 0, il = 1000; i < il; i++) {
     created.push(pool.create("billy", 21));

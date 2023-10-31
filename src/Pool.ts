@@ -1,24 +1,30 @@
-import type { IConstructor } from "@aicacia/core";
+export type IConstructor<T, A extends unknown[] = unknown[]> = new (
+  ...args: A
+) => T;
 
-export type IPoolConstructor<T, A extends any[] = any[]> = (
+export type IPoolConstructor<T, A extends unknown[] = unknown[]> = (
   object: T,
   ...args: A
 ) => void;
 
-export type IPoolDeconstructor<T, A extends any[] = any[]> = (
+export type IPoolDeconstructor<T, A extends unknown[] = unknown[]> = (
   object: T,
   ...args: A
 ) => void;
 
-export function DEFAULT_DECONSTRUCTOR<T>(object: T) {
+export function DEFAULT_DECONSTRUCTOR<T extends object>(object: T) {
   for (const key in object) {
-    if ((object as any).hasOwnProperty(key)) {
-      object[key] = null as any;
+    if (Object.hasOwn(object, key)) {
+      object[key] = null as never;
     }
   }
 }
 
-export class Pool<T, CA extends any[] = any[], DA extends any[] = any[]> {
+export class Pool<
+  T,
+  CA extends unknown[] = unknown[],
+  DA extends unknown[] = unknown[],
+> {
   private pool: T[] = [];
   private Class: IConstructor<T, CA>;
   private Constructor: IPoolConstructor<T, CA>;
@@ -28,8 +34,8 @@ export class Pool<T, CA extends any[] = any[], DA extends any[] = any[]> {
   constructor(
     Class: IConstructor<T, CA>,
     Constructor: IPoolConstructor<T, CA>,
-    Deconstructor: IPoolDeconstructor<T, DA> = DEFAULT_DECONSTRUCTOR as any,
-    limit = Infinity
+    Deconstructor: IPoolDeconstructor<T, DA> = DEFAULT_DECONSTRUCTOR as never,
+    limit = Infinity,
   ) {
     this.Class = Class;
     this.Constructor = Constructor;
@@ -59,6 +65,14 @@ export class Pool<T, CA extends any[] = any[], DA extends any[] = any[]> {
   release(object: T, ...args: DA) {
     this.Deconstructor(object, ...args);
     this.pool.push(object);
+    return this.cleanUpPool();
+  }
+
+  releaseAll(objects: T[], ...args: DA) {
+    for (const object of objects) {
+      this.Deconstructor(object, ...args);
+      this.pool.push(object);
+    }
     return this.cleanUpPool();
   }
 
